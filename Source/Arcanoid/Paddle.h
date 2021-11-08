@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GameFramework/Pawn.h"
-#include "Components/StaticMeshComponent.h"
 #include "Paddle.generated.h"
 
 
