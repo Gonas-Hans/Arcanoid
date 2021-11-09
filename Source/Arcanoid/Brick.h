@@ -3,40 +3,41 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
-#include "GameFramework/ProjectileMovementComponent.h"
-#include "Ball.generated.h"
+#include "Brick.generated.h"
 
 UCLASS()
-class ARCANOID_API ABall : public AActor
+class ARCANOID_API ABrick : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABall();
-
-	virtual  void Launch();
-
-	bool BallLaunced;
-	
+	ABrick();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* SM_Ball;
+	UStaticMeshComponent* SM_Brick;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UProjectileMovementComponent* ProjectileMovement;
+	UBoxComponent* Box_Collision;
 	
+	float SpeedModifierOnBounce = 1.01f;
 
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
+		class UPrimitiveComponent* OtherComp, int32 OtherBodyIndexType, bool bFromSweep,
+		const FHitResult& SweepResult);
+
+	void DestroyBrick();
+	
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION()
-	UStaticMeshComponent* GetBall();
 
 };
