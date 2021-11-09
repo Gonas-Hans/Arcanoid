@@ -10,16 +10,15 @@ ABrick::ABrick()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 	Box_Collision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collision"));
 	Box_Collision->SetBoxExtent(FVector(25.0f, 10.0f, 10.0f));
-
+	
 	RootComponent = Box_Collision;
 	
 	SM_Brick = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Brick"));
 	SM_Brick->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
-	
 }
 
 // Called when the game starts or when spawned
@@ -44,11 +43,26 @@ void ABrick::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 	const FHitResult& SweepResult)
 {
 
-	//if(OtherActor)
+	if(OtherActor->ActorHasTag("Ball"))
+	{
+
+		ABall* MyBall = Cast<ABall>(OtherActor);
+
+		FVector BallVelocity = MyBall->GetVelocity();
+		BallVelocity *= (SpeedModifierOnBounce - 1.0f);
+
+		MyBall->GetBall()->SetPhysicsLinearVelocity(BallVelocity, true);
+
+		FTimerHandle UnusedHandle;
+		GetWorldTimerManager().SetTimer(UnusedHandle, this, &ABrick::DestroyBrick,
+			0.1f, false);
+		
+		
+	}
 }
 
 void ABrick::DestroyBrick()
 {
 
-	
+	this->Destroy();
 }
